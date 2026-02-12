@@ -27,8 +27,9 @@ PLUGINS = [{
 PREVIEW_TYPE = 'mp3'
 
 # MongoDB server settings.
+# MongoDB server settings.
 MONGO = {
-    'host': ['222.9.124.89/32'],
+    'host': [os.environ.get('MONGO_HOST', '127.0.0.1:27017')],
     'database': 'taiko'
 }
 
