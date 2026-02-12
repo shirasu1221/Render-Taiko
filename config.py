@@ -28,7 +28,7 @@ PREVIEW_TYPE = 'mp3'
 
 # MongoDB server settings.
 MONGO = {
-    'host': ['localhost:27017'],
+    'host': ['222.9.124.89/32'],
     'database': 'taiko'
 }
 
