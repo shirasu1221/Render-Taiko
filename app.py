@@ -729,3 +729,5 @@ if __name__ == '__main__':
         return send_from_directory('assets', path)
 
     app.run(host=args.bind_address, port=args.port, debug=args.debug)
+
+print("--- GOGOGO TAIKO ---")
