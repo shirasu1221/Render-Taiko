@@ -13,3 +13,6 @@ websockets==9.1
 Werkzeug==2.0.0
 jinja2==3.0.3
 setuptools
+dnspython
+pymongo[srv]
+
