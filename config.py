@@ -1,56 +1,41 @@
 import os
-# The full URL base asset URL, with trailing slash.
+import urllib.parse
+
+# 基本設定
 ASSETS_BASEURL = '/assets/'
-
-# The full URL base song URL, with trailing slash.
 SONGS_BASEURL = '/songs/'
-
-# Multiplayer websocket URL. Defaults to /p2 if blank.
 MULTIPLAYER_URL = ''
-
-# The email address to display in the "About Simulator" menu.
 EMAIL = None
-
-# Whether to use the user account system.
-ACCOUNTS = False
-
-# Custom JavaScript file to load with the simulator.
+ACCOUNTS = False  # データベース接続を安定させるため一旦 False にします
 CUSTOM_JS = ''
-
-# Default plugins to load with the simulator.
-PLUGINS = [{
-    'url': '',
-    'start': False,
-    'hide': False
-}]
-
-# Filetype to use for song previews. (mp3/ogg)
+PLUGINS = [{'url': '', 'start': False, 'hide': False}]
 PREVIEW_TYPE = 'mp3'
 
-# MongoDB server settings.
-# MongoDB server settings.
+# --- MongoDB 設定 ---
+# RenderのEnvironmentで設定した MONGO_HOST を読み込みます
 MONGO = {
     'host': [os.environ.get('MONGO_HOST', '127.0.0.1:27017')],
     'database': 'taiko'
 }
 
+# --- Redis 設定 ---
+# RenderのEnvironmentで設定した REDIS_URL を読み込み、分解して設定します
+redis_url_str = os.environ.get('REDIS_URL', 'redis://127.0.0.1:6379')
+redis_url = urllib.parse.urlparse(redis_url_str)
 
-# Redis server settings, used for sessions + cache.
 REDIS = {
-    'CACHE_TYPE': 'null',
-    'CACHE_REDIS_HOST': '127.0.0.1',
-    'CACHE_REDIS_PORT': 6379,
-    'CACHE_REDIS_PASSWORD': None,
-    'CACHE_REDIS_DB': None
+    'CACHE_TYPE': 'redis',
+    'CACHE_REDIS_HOST': redis_url.hostname,
+    'CACHE_REDIS_PORT': redis_url.port or 6379,
+    'CACHE_REDIS_PASSWORD': redis_url.password,
+    'CACHE_REDIS_DB': 0
 }
 
-# Secret key used for sessions.
-SECRET_KEY = 'shirasu-taiko'
-
-# Git repository base URL.
+# セキュリティ設定
+SECRET_KEY = os.environ.get('SECRET_KEY', 'shirasu-taiko-key-12345')
 URL = 'https://github.com/bui/taiko-web/'
 
-# Google Drive API.
+# Google Drive API (無効)
 GOOGLE_CREDENTIALS = {
     'gdrive_enabled': False,
     'api_key': '',
