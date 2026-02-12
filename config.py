@@ -1,3 +1,4 @@
+import os
 # The full URL base asset URL, with trailing slash.
 ASSETS_BASEURL = '/assets/'
 
