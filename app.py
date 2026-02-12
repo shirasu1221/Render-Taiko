@@ -79,9 +79,10 @@ def generate_hash(id, form):
                 raise HashException('Invalid response from %s (status code %s)' % (resp.url, resp.status_code))
             md5.update(resp.content)
         else:
+            # 修正箇所: public パスを削除
             if url.startswith("/"):
                 url = url[1:]
-            path = os.path.normpath(os.path.join("public", url))
+            path = os.path.normpath(url)
             if not os.path.isfile(path):
                 raise HashException("File not found: %s" % (os.path.abspath(path)))
             with open(path, "rb") as file:
@@ -691,8 +692,9 @@ def route_api_privacy():
 
 
 def make_preview(song_id, song_type, song_ext, preview):
-    song_path = 'public/songs/%s/main.%s' % (song_id, song_ext)
-    prev_path = 'public/songs/%s/preview.mp3' % song_id
+    # 修正箇所: public パスを削除
+    song_path = 'songs/%s/main.%s' % (song_id, song_ext)
+    prev_path = 'songs/%s/preview.mp3' % song_id
 
     if os.path.isfile(song_path) and not os.path.isfile(prev_path):
         if not preview or preview <= 0:
@@ -717,13 +719,13 @@ if __name__ == '__main__':
     parser.add_argument('-d', '--debug', action='store_true', help='Enable debug mode.')
     args = parser.parse_args()
 
+    # --- 修正箇所: 配信フォルダをルートの src と assets に変更 ---
     @app.route('/src/<path:path>')
     def send_src(path):
-        return send_from_directory('/src', path)
+        return send_from_directory('src', path)
 
     @app.route('/assets/<path:path>')
     def send_assets(path):
-        return send_from_directory('/assets', path)
+        return send_from_directory('assets', path)
 
     app.run(host=args.bind_address, port=args.port, debug=args.debug)
-
