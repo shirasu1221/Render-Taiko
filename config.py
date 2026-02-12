@@ -28,9 +28,10 @@ PREVIEW_TYPE = 'mp3'
 
 # MongoDB server settings.
 MONGO = {
-    'host': [''],
+    'host': ['localhost:27017'],
     'database': 'taiko'
 }
+
 
 # Redis server settings, used for sessions + cache.
 REDIS = {
