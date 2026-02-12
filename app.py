@@ -719,11 +719,11 @@ if __name__ == '__main__':
 
     @app.route('/src/<path:path>')
     def send_src(path):
-        return send_from_directory('public/src', path)
+        return send_from_directory('/src', path)
 
     @app.route('/assets/<path:path>')
     def send_assets(path):
-        return send_from_directory('public/assets', path)
+        return send_from_directory('/assets', path)
 
     app.run(host=args.bind_address, port=args.port, debug=args.debug)
 
