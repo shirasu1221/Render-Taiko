@@ -2,7 +2,7 @@ import os
 import urllib.parse
 
 # 基本設定
-ASSETS_BASEURL = '/assets/'
+ASSETS_BASEURL = '/public/assets/'
 SONGS_BASEURL = '/songs/'
 MULTIPLAYER_URL = ''
 EMAIL = None
