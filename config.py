@@ -11,7 +11,7 @@ MULTIPLAYER_URL = ''
 EMAIL = None
 
 # Whether to use the user account system.
-ACCOUNTS = True
+ACCOUNTS = False
 
 # Custom JavaScript file to load with the simulator.
 CUSTOM_JS = ''
@@ -34,7 +34,7 @@ MONGO = {
 
 # Redis server settings, used for sessions + cache.
 REDIS = {
-    'CACHE_TYPE': 'redis',
+    'CACHE_TYPE': 'null',
     'CACHE_REDIS_HOST': '127.0.0.1',
     'CACHE_REDIS_PORT': 6379,
     'CACHE_REDIS_PASSWORD': None,
@@ -42,7 +42,7 @@ REDIS = {
 }
 
 # Secret key used for sessions.
-SECRET_KEY = 'change-me'
+SECRET_KEY = 'shirasu-taiko'
 
 # Git repository base URL.
 URL = 'https://github.com/bui/taiko-web/'
