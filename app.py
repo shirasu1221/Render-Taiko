@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 import os
 from flask import Flask, jsonify, render_template, request, send_from_directory
 from pymongo import MongoClient
@@ -16,29 +15,23 @@ except ImportError:
 def take_config(name, required=False):
     return getattr(config, name, None) if not required else getattr(config, name)
 
-app = Flask(__name__, template_folder='templates') # templatesフォルダを明示
+app = Flask(__name__, template_folder='templates')
 
-# MongoDB接続
+# MongoDB & Redis 設定
 mongo_config = take_config('MONGO', required=True)
 client = MongoClient(host=mongo_config['host'])
 db = client[mongo_config['database']]
-
-# Session & Cache 設定
 app.secret_key = take_config('SECRET_KEY') or 'change-me'
 app.config['SESSION_TYPE'] = 'redis'
 redis_config = take_config('REDIS', required=True)
-app.config['SESSION_REDIS'] = Redis(
-    host=redis_config['CACHE_REDIS_HOST'],
-    port=redis_config['CACHE_REDIS_PORT'],
-    password=redis_config['CACHE_REDIS_PASSWORD'],
-    db=redis_config['CACHE_REDIS_DB']
-)
+app.config['SESSION_REDIS'] = Redis(host=redis_config['CACHE_REDIS_HOST'], port=redis_config['CACHE_REDIS_PORT'], password=redis_config['CACHE_REDIS_PASSWORD'], db=redis_config['CACHE_REDIS_DB'])
 Session(app)
 Cache(app, config=redis_config)
 CSRFProtect(app)
 
 def get_config():
-    base_url = request.host_url
+    # 常に自分のURLをベースにする
+    base_url = request.host_url.rstrip('/') + '/'
     return {
         'songs_baseurl': base_url + 'songs/',
         'assets_baseurl': base_url + 'assets/',
@@ -50,7 +43,7 @@ def get_config():
 def route_index():
     return render_template('index.html', version={'version': '1.0'}, config=get_config())
 
-# --- API関連 ---
+# --- API ---
 @app.route('/api/config')
 def route_api_config():
     return jsonify(get_config())
@@ -63,16 +56,29 @@ def route_api_categories():
 def route_api_songs():
     return jsonify(list(db.songs.find({'enabled': True}, {'_id': False})))
 
-# --- 【最重要】静的ファイルの配信設定 ---
+# --- 【解決策】大文字小文字を無視してファイルを配信する関数 ---
+def send_file_case_insensitive(directory, filename):
+    # 実際のフォルダ内のファイルリストを取得
+    files = os.listdir(directory)
+    # 小文字で比較して一致するものを探す
+    for f in files:
+        if f.lower() == filename.lower():
+            return send_from_directory(directory, f)
+    # 見つからなければ普通に送る（404になる）
+    return send_from_directory(directory, filename)
 
 @app.route('/assets/<path:filename>')
 def send_assets(filename):
-    # assets フォルダから再帰的にファイルを探します
+    # img/ などの階層がある場合はその中で探す
+    full_path = os.path.join('assets', filename)
+    dir_name = os.path.dirname(full_path)
+    base_name = os.path.basename(full_path)
+    if os.path.exists(dir_name):
+        return send_file_case_insensitive(dir_name, base_name)
     return send_from_directory('assets', filename)
 
 @app.route('/src/<path:filename>')
 def send_src(filename):
-    # src フォルダ（js, css等）を配信します
     return send_from_directory('src', filename)
 
 @app.route('/songs/<path:filename>')
