@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 import os
 from flask import Flask, jsonify, render_template, request, send_from_directory
 from pymongo import MongoClient
@@ -22,24 +21,16 @@ app = Flask(__name__)
 mongo_config = take_config('MONGO', required=True)
 client = MongoClient(host=mongo_config['host'])
 db = client[mongo_config['database']]
-
 app.secret_key = take_config('SECRET_KEY') or 'change-me'
 app.config['SESSION_TYPE'] = 'redis'
 redis_config = take_config('REDIS', required=True)
-app.config['SESSION_REDIS'] = Redis(
-    host=redis_config['CACHE_REDIS_HOST'],
-    port=redis_config['CACHE_REDIS_PORT'],
-    password=redis_config['CACHE_REDIS_PASSWORD'],
-    db=redis_config['CACHE_REDIS_DB']
-)
-
+app.config['SESSION_REDIS'] = Redis(host=redis_config['CACHE_REDIS_HOST'], port=redis_config['CACHE_REDIS_PORT'], password=redis_config['CACHE_REDIS_PASSWORD'], db=redis_config['CACHE_REDIS_DB'])
 Session(app)
 Cache(app, config=redis_config)
 CSRFProtect(app)
 
-# --- 設定情報（ここを修正しました） ---
 def get_config():
-    # Render環境では末尾のスラッシュが重要です
+    # URLの末尾を確実に処理
     return {
         'songs_baseurl': '/songs/',
         'assets_baseurl': '/assets/',
@@ -65,16 +56,15 @@ def route_api_categories():
 def route_api_songs():
     return jsonify(list(db.songs.find({'enabled': True}, {'_id': False})))
 
-# --- 静的ファイル配信 ---
-
+# --- 静的ファイル配信 (徹底的にシンプルに) ---
 @app.route('/assets/<path:filename>')
 def send_assets(filename):
-    # ルートにある assets フォルダから配信
+    # assets フォルダの場所をデバッグ出力（ログで見れます）
+    print(f"DEBUG: Requesting asset: {filename}")
     return send_from_directory('assets', filename)
 
 @app.route('/src/<path:filename>')
 def send_src(filename):
-    # ルートにある src フォルダから配信
     return send_from_directory('src', filename)
 
 @app.route('/songs/<path:filename>')
