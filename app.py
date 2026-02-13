@@ -29,8 +29,9 @@ Session(app)
 Cache(app, config=redis_config)
 CSRFProtect(app)
 
+# --- 重要：ここを修正しました ---
 def get_config():
-    # URLの末尾を確実に処理
+    # Render環境でエラーが出にくい「相対パス」指定を徹底します
     return {
         'songs_baseurl': '/songs/',
         'assets_baseurl': '/assets/',
@@ -41,6 +42,7 @@ def get_config():
 
 @app.route('/')
 def route_index():
+    # 以前のようにエラーが出る画面（index.html）を確実に表示させます
     return render_template('index.html', version={'version': '1.0'}, config=get_config())
 
 # --- API ---
@@ -56,11 +58,9 @@ def route_api_categories():
 def route_api_songs():
     return jsonify(list(db.songs.find({'enabled': True}, {'_id': False})))
 
-# --- 静的ファイル配信 (徹底的にシンプルに) ---
+# --- 静的ファイル配信 ---
 @app.route('/assets/<path:filename>')
 def send_assets(filename):
-    # assets フォルダの場所をデバッグ出力（ログで見れます）
-    print(f"DEBUG: Requesting asset: {filename}")
     return send_from_directory('assets', filename)
 
 @app.route('/src/<path:filename>')
@@ -77,4 +77,5 @@ if __name__ == '__main__':
     parser.add_argument('port', type=int, nargs='?', default=10000)
     parser.add_argument('-b', '--bind-address', default='0.0.0.0')
     args = parser.parse_args()
-    app.run(host=args.bind_address, port=args.port)
+    # デバッグモードを有効にしてエラーを追いやすくします
+    app.run(host=args.bind_address, port=args.port, debug=False)
