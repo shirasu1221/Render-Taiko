@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 import os
 from flask import Flask, jsonify, render_template, request, send_from_directory
 from pymongo import MongoClient
@@ -10,40 +11,51 @@ from flask_wtf.csrf import CSRFProtect
 try:
     import config
 except ImportError:
-    raise FileNotFoundError('config.py が見つかりません。')
+    raise FileNotFoundError('config.py が見てかりません。')
 
 def take_config(name, required=False):
     return getattr(config, name, None) if not required else getattr(config, name)
 
-app = Flask(__name__, template_folder='templates')
+app = Flask(__name__)
 
-# MongoDB & Redis 設定
+# --- データベース接続設定 ---
 mongo_config = take_config('MONGO', required=True)
 client = MongoClient(host=mongo_config['host'])
 db = client[mongo_config['database']]
+
 app.secret_key = take_config('SECRET_KEY') or 'change-me'
 app.config['SESSION_TYPE'] = 'redis'
 redis_config = take_config('REDIS', required=True)
-app.config['SESSION_REDIS'] = Redis(host=redis_config['CACHE_REDIS_HOST'], port=redis_config['CACHE_REDIS_PORT'], password=redis_config['CACHE_REDIS_PASSWORD'], db=redis_config['CACHE_REDIS_DB'])
+app.config['SESSION_REDIS'] = Redis(
+    host=redis_config['CACHE_REDIS_HOST'],
+    port=redis_config['CACHE_REDIS_PORT'],
+    password=redis_config['CACHE_REDIS_PASSWORD'],
+    db=redis_config['CACHE_REDIS_DB']
+)
+
 Session(app)
 Cache(app, config=redis_config)
 CSRFProtect(app)
 
+# --- 設定情報 ---
 def get_config():
-    # 常に自分のURLをベースにする
-    base_url = request.host_url.rstrip('/') + '/'
+    # request.host_url を使って現在のドメインを自動取得
+    base_url = request.host_url.rstrip('/')
     return {
-        'songs_baseurl': base_url + 'songs/',
-        'assets_baseurl': base_url + 'assets/',
+        'songs_baseurl': f"{base_url}/songs/",
+        'assets_baseurl': f"{base_url}/assets/",
         'preview_type': 'mp3',
-        'accounts': True
+        'accounts': True,
+        'title': 'taiko-web'
     }
 
+# --- ページ配信 ---
 @app.route('/')
 def route_index():
+    # config情報を index.html に渡す
     return render_template('index.html', version={'version': '1.0'}, config=get_config())
 
-# --- API ---
+# --- API配信 ---
 @app.route('/api/config')
 def route_api_config():
     return jsonify(get_config())
@@ -56,39 +68,30 @@ def route_api_categories():
 def route_api_songs():
     return jsonify(list(db.songs.find({'enabled': True}, {'_id': False})))
 
-# --- 【解決策】大文字小文字を無視してファイルを配信する関数 ---
-def send_file_case_insensitive(directory, filename):
-    # 実際のフォルダ内のファイルリストを取得
-    files = os.listdir(directory)
-    # 小文字で比較して一致するものを探す
-    for f in files:
-        if f.lower() == filename.lower():
-            return send_from_directory(directory, f)
-    # 見つからなければ普通に送る（404になる）
-    return send_from_directory(directory, filename)
+# --- 静的ファイル配信（これが一番大事です） ---
 
 @app.route('/assets/<path:filename>')
 def send_assets(filename):
-    # img/ などの階層がある場合はその中で探す
-    full_path = os.path.join('assets', filename)
-    dir_name = os.path.dirname(full_path)
-    base_name = os.path.basename(full_path)
-    if os.path.exists(dir_name):
-        return send_file_case_insensitive(dir_name, base_name)
+    # assets フォルダ内のサブフォルダ（img/など）も再帰的に探します
     return send_from_directory('assets', filename)
 
 @app.route('/src/<path:filename>')
 def send_src(filename):
+    # JavaScriptやCSSを配信します
     return send_from_directory('src', filename)
 
 @app.route('/songs/<path:filename>')
 def send_songs(filename):
+    # 楽曲データを配信します
     return send_from_directory('songs', filename)
 
+# --- サーバー起動 ---
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
+    # Render標準の10000番ポートと外部公開用のアドレス0.0.0.0を指定
     parser.add_argument('port', type=int, nargs='?', default=10000)
     parser.add_argument('-b', '--bind-address', default='0.0.0.0')
     args = parser.parse_args()
+    
     app.run(host=args.bind_address, port=args.port)
