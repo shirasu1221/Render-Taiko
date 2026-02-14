@@ -23,6 +23,14 @@
         </div>
     </div>
 
+    <div id="canvas-container">
+        <div id="song-select" class="view-hidden">
+            <canvas id="song-sel-canvas"></canvas>
+            <div id="song-sel-selectable"></div>
+        </div>
+        <div id="custom-songs" class="view-hidden"></div>
+    </div>
+
     <script src="/src/js/assets.js"></script>
     <script src="/src/js/strings.js"></script>
     <script src="/src/js/pageevents.js"></script>
@@ -30,6 +38,14 @@
     <script src="/src/js/keyboard.js"></script>
     <script src="/src/js/gamepad.js"></script>
     <script src="/src/js/browsersupport.js"></script>
-    <script src="/src/js/main.js"></script>
+    
+    <script>
+        // HTMLの読み込みが100%終わってから main.js を起動する
+        window.onload = function() {
+            var script = document.createElement('script');
+            script.src = "/src/js/main.js";
+            document.body.appendChild(script);
+        };
+    </script>
 </body>
 </html>
