@@ -29,21 +29,25 @@ Session(app)
 Cache(app, config=redis_config)
 CSRFProtect(app)
 
-# --- 重要：ここを修正しました ---
+# --- エラー解決の核心部分 ---
 def get_config():
-    # Render環境でエラーが出にくい「相対パス」指定を徹底します
     return {
         'songs_baseurl': '/songs/',
         'assets_baseurl': '/assets/',
         'preview_type': 'mp3',
         'accounts': True,
-        'title': 'taiko-web'
+        'title': 'taiko-web',
+        # loader.js が欲しがっているデータを追加
+        '_version': {
+            'commit_short': 'rev-1',
+            'version': '1.0'
+        }
     }
 
 @app.route('/')
 def route_index():
-    # 以前のようにエラーが出る画面（index.html）を確実に表示させます
-    return render_template('index.html', version={'version': '1.0'}, config=get_config())
+    # 画面側にもバージョン情報を渡す
+    return render_template('index.html', version={'commit_short': 'rev-1'}, config=get_config())
 
 # --- API ---
 @app.route('/api/config')
@@ -77,5 +81,4 @@ if __name__ == '__main__':
     parser.add_argument('port', type=int, nargs='?', default=10000)
     parser.add_argument('-b', '--bind-address', default='0.0.0.0')
     args = parser.parse_args()
-    # デバッグモードを有効にしてエラーを追いやすくします
-    app.run(host=args.bind_address, port=args.port, debug=False)
+    app.run(host=args.bind_address, port=args.port)
