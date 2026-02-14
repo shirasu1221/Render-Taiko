@@ -15,7 +15,7 @@
 <body id="taiko-web">
     <div id="assets"></div>
     
-    <div id="screen" class="pattern-bg"></div> 
+    <div id="screen" class="pattern-bg" style="outline: none;"></div> 
 
     <div id="loader">
         <div id="loader-inner">
@@ -37,7 +37,8 @@
     <script src="/src/js/strings.js"></script>
     <script src="/src/js/pageevents.js"></script>
     <script src="/src/js/loader.js"></script>
-    <script src="/src/js/tjaparser.js"></script> <script src="/src/js/keyboard.js"></script>
+    <script src="/src/js/tjaparser.js"></script>
+    <script src="/src/js/keyboard.js"></script>
     <script src="/src/js/gamepad.js"></script>
     <script src="/src/js/soundbuffer.js"></script>
     <script src="/src/js/canvascache.js"></script>
@@ -47,6 +48,11 @@
     <script src="/src/js/customsongs.js"></script>
     <script src="/src/js/browsersupport.js"></script>
     
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log("DOM fully loaded. Starting main.js...");
+        });
+    </script>
     <script src="/src/js/main.js"></script>
 </body>
 </html>
