@@ -3,42 +3,33 @@
 <head>
 	<meta charset="utf-8">
 	<title>太鼓ウェブ - Taiko Web</title>
+	
 	<script>
-		// config情報を真っ先に定義
-		window.config = {{ config|tojson|safe }};
+		var configData = {{ config|tojson|safe }};
+		window.config = configData;
+		// songselect.js が内部で参照する可能性のあるグローバル変数も埋めておく
+		window.settings = configData; 
+		console.log("Config/Settings injected successfully.");
 	</script>
+
 	<link rel="icon" href="{{config.assets_baseurl}}img/favicon.png" type="image/png">
 	<meta name="viewport" content="width=device-width, user-scalable=no">
-	<link rel="stylesheet" href="/src/css/loader.css">
-	<link rel="stylesheet" href="/src/css/main.css">
+	<meta name="color-scheme" content="only light">
+	<link rel="stylesheet" href="/src/css/loader.css?{{version.commit_short}}">
 </head>
 <body>
 	<div id="assets"></div>
-	
 	<div id="screen" class="pattern-bg"></div>
-
-	<div id="loader">
-		<div id="loader-inner">
-			<div id="loader-circles">
-				<div></div><div></div><div></div>
-			</div>
-		</div>
+	
+	<div data-nosnippet id="version">
+		<a href="{{version.url}}" target="_blank" id="version-link" class="stroke-sub">taiko-web ver.{{version.version}} ({{version.commit_short}})</a>
 	</div>
 
-	<script src="/src/js/assets.js"></script>
-	<script src="/src/js/strings.js"></script>
-	<script src="/src/js/pageevents.js"></script>
-	<script src="/src/js/loader.js"></script>
-	<script src="/src/js/keyboard.js"></script>
-	<script src="/src/js/gamepad.js"></script>
-	<script src="/src/js/browsersupport.js"></script>
-	
-	<script>
-		window.addEventListener('DOMContentLoaded', function() {
-			var mainScript = document.createElement('script');
-			mainScript.src = "/src/js/main.js";
-			document.body.appendChild(mainScript);
-		});
-	</script>
+	<script src="/src/js/assets.js?{{version.commit_short}}" defer></script>
+	<script src="/src/js/strings.js?{{version.commit_short}}" defer></script>
+	<script src="/src/js/pageevents.js?{{version.commit_short}}" defer></script>
+	<script src="/src/js/loader.js?{{version.commit_short}}" defer></script>
+	<script src="/src/js/browsersupport.js?{{version.commit_short}}" defer></script>
+	<script src="/src/js/main.js?{{version.commit_short}}" defer></script>
 </body>
 </html>
