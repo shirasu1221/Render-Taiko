@@ -17,6 +17,12 @@ def take_config(name, required=False):
 
 app = Flask(__name__)
 
+@app.after_request
+def add_header(response):
+    if response.mimetype == 'application/javascript' or response.mimetype == 'text/html':
+        response.charset = 'utf-8'
+    return response
+
 # --- データベース接続 ---
 mongo_config = take_config('MONGO', required=True)
 client = MongoClient(host=mongo_config['host'])
