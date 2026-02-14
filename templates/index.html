@@ -1,47 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
-	<title>太鼓ウェブ - Taiko Web</title>
-	<script>
-		window.config = {{ config|tojson|safe }};
-	</script>
-	<link rel="icon" href="{{config.assets_baseurl}}img/favicon.png" type="image/png">
-	<meta name="viewport" content="width=device-width, user-scalable=no">
-	<link rel="stylesheet" href="/src/css/loader.css">
-	<link rel="stylesheet" href="/src/css/main.css">
+    <meta charset="utf-8">
+    <title>太鼓ウェブ - Taiko Web</title>
+    <script>
+        window.config = {{ config|tojson|safe }};
+    </script>
+    <link rel="icon" href="{{config.assets_baseurl}}img/favicon.png" type="image/png">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <link rel="stylesheet" href="/src/css/loader.css">
+    <link rel="stylesheet" href="/src/css/main.css">
 </head>
 <body>
-	<div id="assets"></div>
-	<div id="screen" class="pattern-bg"></div>
-	<div id="loader">
-		<div id="loader-inner">
-			<div id="loader-circles">
-				<div></div><div></div><div></div>
-			</div>
-		</div>
-	</div>
-	<div id="canvas-container">
-		<div id="song-select" class="view-hidden">
-			<canvas id="song-sel-canvas"></canvas>
-			<div id="song-sel-selectable"></div>
-		</div>
-		<div id="custom-songs" class="view-hidden"></div>
-	</div>
+    <div id="assets"></div>
+    <div id="screen" class="pattern-bg"></div>
 
-	<script src="/src/js/assets.js" defer></script>
-	<script src="/src/js/strings.js" defer></script>
-	<script src="/src/js/pageevents.js" defer></script>
-	<script src="/src/js/loader.js" defer></script>
-	<script src="/src/js/tjaparser.js" defer></script>
-	<script src="/src/js/keyboard.js" defer></script>
-	<script src="/src/js/gamepad.js" defer></script>
-	<script src="/src/js/main.js" defer></script>
-	<script src="/src/js/canvascache.js" defer></script>
-	<script src="/src/js/canvasdraw.js" defer></script>
-	<script src="/src/js/songselect.js" defer></script>
-	<script src="/src/js/titlescreen.js" defer></script>
-	<script src="/src/js/customsongs.js" defer></script>
-	<script src="/src/js/browsersupport.js" defer></script>
+    <div id="loader">
+        <div id="loader-inner">
+            <div id="loader-circles">
+                <div></div><div></div><div></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/src/js/assets.js"></script>
+    <script src="/src/js/strings.js"></script>
+    <script src="/src/js/pageevents.js"></script>
+    <script src="/src/js/loader.js"></script>
+    <script src="/src/js/keyboard.js"></script>
+    <script src="/src/js/gamepad.js"></script>
+    <script src="/src/js/browsersupport.js"></script>
+    <script src="/src/js/main.js"></script>
 </body>
 </html>
