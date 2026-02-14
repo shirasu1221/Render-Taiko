@@ -169,7 +169,7 @@ class SongSelect{
 		})
 		
 		var showCustom = false
-		if(gameConfig.google_credentials.gdrive_enabled){
+		if(false){
 			showCustom = true
 		}else if("webkitdirectory" in HTMLInputElement.prototype && !(/Android|iPhone|iPad/.test(navigator.userAgent))){
 			showCustom = true
