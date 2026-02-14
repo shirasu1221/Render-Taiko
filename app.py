@@ -37,7 +37,10 @@ def get_config():
         'preview_type': 'mp3',
         'accounts': True,
         'title': '太鼓ウェブ - Taiko Web',
-        'gdrive_enabled': False,  # エラーの直接の原因を解決
+        'gdrive_enabled': False,
+        'google_credentials': {  # ★customsongs.jsのエラー防止用に追加
+            'gdrive_enabled': False
+        },
         'multiplayer': False,
         'multiplayer_url': '',
         '_version': {
@@ -48,7 +51,6 @@ def get_config():
 
 @app.route('/')
 def route_index():
-    # index.htmlに渡す変数名を整理しました
     conf = get_config()
     version_info = {
         'commit_short': 'rev-1',
