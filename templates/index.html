@@ -11,6 +11,10 @@
 	<meta name="robots" content="noimageindex">
 	<meta name="color-scheme" content="only light">
 
+	<script>
+		window.config = {{ config|tojson|safe }};
+	</script>
+
 	<link rel="stylesheet" href="/src/css/loader.css?{{version.commit_short}}">
 
 	<script src="/src/js/assets.js?{{version.commit_short}}"></script>
