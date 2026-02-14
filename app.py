@@ -29,6 +29,7 @@ Session(app)
 Cache(app, config=redis_config)
 CSRFProtect(app)
 
+# --- 重要：選曲画面で必要な項目を追加 ---
 def get_config():
     return {
         'songs_baseurl': '/songs/',
@@ -36,6 +37,8 @@ def get_config():
         'preview_type': 'mp3',
         'accounts': True,
         'title': 'taiko-web',
+        'gdrive_enabled': False,  # エラーの直接の原因：ここを追加
+        'multiplayer_url': '',    # ついでに必要そうな項目も追加
         '_version': {
             'commit_short': 'rev-1',
             'version': '1.0'
@@ -46,7 +49,7 @@ def get_config():
 def route_index():
     return render_template('index.html', version={'commit_short': 'rev-1'}, config=get_config())
 
-# --- API (ここを強化しました) ---
+# --- API ---
 @app.route('/api/config')
 def route_api_config():
     return jsonify(get_config())
@@ -59,10 +62,8 @@ def route_api_categories():
 def route_api_songs():
     return jsonify(list(db.songs.find({'enabled': True}, {'_id': False})))
 
-# スコア取得のエラー(404)を消すための窓口
 @app.route('/api/scores/get')
 def route_api_scores_get():
-    # まだスコアがないので、空のリストを返してエラーを防ぎます
     return jsonify([])
 
 # --- 静的ファイル配信 ---
