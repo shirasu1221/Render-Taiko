@@ -5,13 +5,16 @@
 	<title>太鼓ウェブ - Taiko Web</title>
 	
 	<script>
-		window.config = {{ config|tojson|safe }};
+		var configData = {{ config|tojson|safe }};
+		window.config = configData;
+		// songselect.js が内部で参照する可能性のあるグローバル変数も埋めておく
+		window.settings = configData; 
+		console.log("Config/Settings injected successfully.");
 	</script>
 
 	<link rel="icon" href="{{config.assets_baseurl}}img/favicon.png" type="image/png">
 	<meta name="viewport" content="width=device-width, user-scalable=no">
 	<meta name="color-scheme" content="only light">
-
 	<link rel="stylesheet" href="/src/css/loader.css?{{version.commit_short}}">
 </head>
 <body>
@@ -28,11 +31,5 @@
 	<script src="/src/js/loader.js?{{version.commit_short}}" defer></script>
 	<script src="/src/js/browsersupport.js?{{version.commit_short}}" defer></script>
 	<script src="/src/js/main.js?{{version.commit_short}}" defer></script>
-
-	<noscript>
-		<div data-nosnippet id="unsupportedBrowser">
-			<span>太鼓ウェブはJavaScriptを有効にする必要があります。</span>
-		</div>
-	</noscript>
 </body>
 </html>
