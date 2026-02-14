@@ -4,9 +4,8 @@ class CustomSongs {
 	}
 
 	init(songSelect) {
-		// songSelectがundefinedの場合のエラーを回避するための安全策
 		this.songSelect = songSelect || {}
-		this.touchEnabled = (songSelect && songSelect.touchEnabled) || (typeof touchEnabled !== "undefined" ? touchEnabled : false)
+		this.touchEnabled = (songSelect && songSelect.touchEnabled) || false
 
 		loader.changePage("customsongs", false)
 
@@ -14,9 +13,6 @@ class CustomSongs {
 		this.view.classList.remove("view-hidden")
 
 		this.items = []
-		this.selected = -1
-
-		// フォルダ読み込みボタンの作成
 		this.linkLocalFolder = document.createElement("div")
 		this.linkLocalFolder.classList.add("custom-songs-item")
 		this.setAltText(this.linkLocalFolder, strings.customSongs.localFolder)
@@ -27,7 +23,6 @@ class CustomSongs {
 		this.linkLocalFolder.classList.add("selected")
 		this.view.appendChild(this.linkLocalFolder)
 
-		// 入力デバイスの初期化
 		this.keyboard = new Keyboard({
 			confirm: ["enter", "space", "don_l", "don_r"],
 			back: ["escape"]
@@ -75,15 +70,14 @@ class CustomSongs {
 		}
 
 		this.songs = []
+		this.totalTja = tjaFiles.length
 		this.loadedCount = 0
 
 		tjaFiles.forEach(file => {
 			var reader = new FileReader()
-			// 文字化け対策：UTF-8で試行し、失敗ならShift-JISで読み直す
 			reader.onload = (e) => {
 				var result = e.target.result
-				// 文字化け（置換文字）が含まれるかチェック
-				if (result.includes('') || /[\uFFFD]/.test(result)) {
+				if (result.includes('\uFFFD')) {
 					var sjisReader = new FileReader()
 					sjisReader.onload = (sjisE) => {
 						this.addSong(sjisE.target.result, file, files)
@@ -98,17 +92,19 @@ class CustomSongs {
 	}
 
 	addSong(content, tjaFile, allFiles) {
-		// TjaParserで譜面を解析
-		var song = new TjaParser(content, tjaFile, allFiles)
-		this.loadedCount++
-		
-		if (!song.unloaded) {
-			this.songs.push(song)
+		try {
+			var song = new TjaParser(content, tjaFile, allFiles)
+			if (!song.unloaded) {
+				this.songs.push(song)
+			}
+		} catch (e) {
+			console.error("TJA Parse Error:", e)
 		}
 
-		// 全ファイルの処理が終わったら選曲画面へ
-		if (this.loadedCount >= this.songs.length) {
-			setTimeout(() => this.songsLoaded(), 100)
+		this.loadedCount++
+		// 全てのTJAファイルの読み込み試行が終わったら次へ
+		if (this.loadedCount >= this.totalTja) {
+			this.songsLoaded()
 		}
 	}
 
@@ -116,16 +112,22 @@ class CustomSongs {
 		if (this.songs.length > 0) {
 			assets.customSongs = this.songs
 			this.clean()
-			new SongSelect("customSongs", false, this.touchEnabled)
+			// 選曲画面の初期化を少し遅らせて確実に描画させる
+			setTimeout(() => {
+				new SongSelect("customSongs", false, this.touchEnabled)
+			}, 200)
+		} else {
+			alert(strings.customSongs.noTjaFiles)
 		}
 	}
 
 	clean() {
 		if (this.keyboard) this.keyboard.clean()
 		if (this.gamepad) this.gamepad.clean()
-		this.view.classList.add("view-hidden")
-		this.view.innerHTML = ""
-		// songSelectが存在する場合のみcleanを実行する安全策
+		if (this.view) {
+			this.view.classList.add("view-hidden")
+			this.view.innerHTML = ""
+		}
 		if (this.songSelect && this.songSelect.clean) {
 			this.songSelect.clean()
 		}
