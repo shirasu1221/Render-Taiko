@@ -17,6 +17,13 @@ def take_config(name, required=False):
 
 app = Flask(__name__)
 
+# --- 文字化け対策（すべてのレスポンスをUTF-8に強制） ---
+@app.after_request
+def add_header(response):
+    if response.mimetype == 'application/javascript' or response.mimetype == 'text/html':
+        response.charset = 'utf-8'
+    return response
+
 # --- データベース接続 ---
 mongo_config = take_config('MONGO', required=True)
 client = MongoClient(host=mongo_config['host'])
@@ -38,7 +45,7 @@ def get_config():
         'accounts': True,
         'title': '太鼓ウェブ - Taiko Web',
         'gdrive_enabled': False,
-        'google_credentials': {  # ★customsongs.jsのエラー防止用に追加
+        'google_credentials': {
             'gdrive_enabled': False
         },
         'multiplayer': False,
@@ -55,11 +62,10 @@ def route_index():
     version_info = {
         'commit_short': 'rev-1',
         'version': '1.0',
-        'url': 'https://github.com/HarukaAngel/taiko/'
+        'url': 'https://github.com/shirasu1221/Render-Taiko'
     }
     return render_template('index.html', version=version_info, config=conf)
 
-# --- API ---
 @app.route('/api/config')
 def route_api_config():
     return jsonify(get_config())
@@ -76,7 +82,6 @@ def route_api_songs():
 def route_api_scores_get():
     return jsonify([])
 
-# --- 静的ファイル配信 ---
 @app.route('/assets/<path:filename>')
 def send_assets(filename):
     return send_from_directory('assets', filename)
@@ -90,9 +95,5 @@ def send_songs(filename):
     return send_from_directory('songs', filename)
 
 if __name__ == '__main__':
-    import argparse
-    parser = argparse.ArgumentParser()
-    parser.add_argument('port', type=int, nargs='?', default=10000)
-    parser.add_argument('-b', '--bind-address', default='0.0.0.0')
-    args = parser.parse_args()
-    app.run(host=args.bind_address, port=args.port)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host='0.0.0.0', port=port)
