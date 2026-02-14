@@ -29,18 +29,17 @@ Session(app)
 Cache(app, config=redis_config)
 CSRFProtect(app)
 
+# --- 設定情報（JSに渡すデータ） ---
 def get_config():
-    # ゲーム本体（JS）が期待するすべての設定項目を定義します
     return {
         'songs_baseurl': '/songs/',
         'assets_baseurl': '/assets/',
         'preview_type': 'mp3',
         'accounts': True,
-        'title': 'taiko-web',
-        'gdrive_enabled': False,    # エラー解決の鍵
-        'multiplayer': False,       # 先回りで追加
-        'multiplayer_url': '',      # 先回りで追加
-        'is_re_use': False,         # 一部の派生版で必要な項目
+        'title': '太鼓ウェブ - Taiko Web',
+        'gdrive_enabled': False,  # エラーの直接の原因を解決
+        'multiplayer': False,
+        'multiplayer_url': '',
         '_version': {
             'commit_short': 'rev-1',
             'version': '1.0'
@@ -49,8 +48,14 @@ def get_config():
 
 @app.route('/')
 def route_index():
-    # テンプレート側にも config を渡して JS から参照できるようにします
-    return render_template('index.html', version={'commit_short': 'rev-1'}, config=get_config())
+    # index.htmlに渡す変数名を整理しました
+    conf = get_config()
+    version_info = {
+        'commit_short': 'rev-1',
+        'version': '1.0',
+        'url': 'https://github.com/HarukaAngel/taiko/'
+    }
+    return render_template('index.html', version=version_info, config=conf)
 
 # --- API ---
 @app.route('/api/config')
