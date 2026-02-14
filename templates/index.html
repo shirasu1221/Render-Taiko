@@ -1,20 +1,16 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="utf-8">
-    <title>太鼓ウェブ - Taiko Web</title>
-    <script>
-        window.config = {{ config|tojson|safe }};
-        window.gameConfig = window.config;
-    </script>
-    <link rel="icon" href="{{config.assets_baseurl}}img/favicon.png">
-    <meta name="viewport" content="width=device-width, user-scalable=no">
-    <link rel="stylesheet" href="/src/css/loader.css?{{version.commit_short}}">
-    <link rel="stylesheet" href="/src/css/main.css?{{version.commit_short}}">
-</head>
-<body>
+<body id="taiko-web">
     <div id="assets"></div>
-    <div id="screen" class="pattern-bg"></div>
+    
+    <div id="screen"></div> 
+
+    <div id="loader">
+        <div id="loader-inner">
+            <div id="loader-circles">
+                <div></div><div></div><div></div>
+            </div>
+        </div>
+    </div>
+
     <div id="canvas-container">
         <div id="song-select" class="view-hidden">
             <canvas id="song-sel-canvas"></canvas>
@@ -25,20 +21,16 @@
 
     <script src="/src/js/assets.js" defer></script>
     <script src="/src/js/strings.js" defer></script>
-    <script src="/src/js/tjaparser.js" defer></script> 
-    
     <script src="/src/js/pageevents.js" defer></script>
     <script src="/src/js/loader.js" defer></script>
+    <script src="/src/js/tjaparser.js" defer></script>
     <script src="/src/js/keyboard.js" defer></script>
     <script src="/src/js/gamepad.js" defer></script>
     <script src="/src/js/soundbuffer.js" defer></script>
-    
     <script src="/src/js/canvascache.js" defer></script>
     <script src="/src/js/canvasdraw.js" defer></script>
     <script src="/src/js/songselect.js" defer></script>
     <script src="/src/js/titlescreen.js" defer></script>
     <script src="/src/js/customsongs.js" defer></script>
-    
     <script src="/src/js/main.js" defer></script>
 </body>
-</html>
