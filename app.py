@@ -19,6 +19,7 @@ app = Flask(__name__)
 
 @app.after_request
 def add_header(response):
+    # JavaScriptとHTMLファイルに対して、UTF-8であることを強制する
     if response.mimetype == 'application/javascript' or response.mimetype == 'text/html':
         response.charset = 'utf-8'
     return response
