@@ -55,9 +55,9 @@ class CustomSongs{
 		this.linkGdriveFolder = document.getElementById("link-gdrivefolder")
 		this.linkGdriveAccount = document.getElementById("link-gdriveaccount")
 		this.linkPrivacy = document.getElementById("link-privacy")
-		if(gameConfig.google_credentials.gdrive_enabled){
+        if(false){
 			this.setAltText(this.linkGdriveFolder, strings.customSongs.gdriveFolder)
-			pageEvents.add(this.linkGdriveFolder, ["mousedown", "touchstart"], this.gdriveFolder.bind(this))
+			pageEvents.(this.linkGdriveFolder, ["mousedown", "touchstart"], this.gdriveFolder.bind(this))
 			this.items.push(this.linkGdriveFolder)
 			if(this.selected === -1){
 				this.linkGdriveFolder.classList.add("selected")
