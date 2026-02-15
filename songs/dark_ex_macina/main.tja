@@ -1,7 +1,7 @@
 ﻿TITLE:ダーク・エクス・マキナ♡
 SUBTITLE:--マキナ the DARK prod. 坪井リヒト(BNSI)
 BPM:299
-WAVE:main.ogg
+WAVE:dark main.ogg
 OFFSET:-1.364
 SONGVOL:100
 SEVOL:100
@@ -462,7 +462,6 @@ BALLOON:5,13,2,2,83
 #BARLINEOFF
 #BPMCHANGE 108
 ,
-
 
 
 #END
