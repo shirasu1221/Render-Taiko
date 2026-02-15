@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+import json # JSON読み込み用に追加
 from flask import Flask, jsonify, render_template, request, send_from_directory
 from pymongo import MongoClient
 from redis import Redis
@@ -19,7 +20,6 @@ app = Flask(__name__)
 
 @app.after_request
 def add_header(response):
-    # JavaScriptとHTMLファイルに対して、UTF-8であることを強制する
     if response.mimetype == 'application/javascript' or response.mimetype == 'text/html':
         response.charset = 'utf-8'
     return response
@@ -36,7 +36,7 @@ Session(app)
 Cache(app, config=redis_config)
 CSRFProtect(app)
 
-# --- 設定情報（JSに渡すデータ） ---
+# --- 設定情報 ---
 def get_config():
     return {
         'songs_baseurl': '/songs/',
@@ -45,7 +45,7 @@ def get_config():
         'accounts': True,
         'title': '太鼓ウェブ - Taiko Web',
         'gdrive_enabled': False,
-        'google_credentials': {  # ★customsongs.jsのエラー防止用に追加
+        'google_credentials': {
             'gdrive_enabled': False
         },
         'multiplayer': False,
@@ -73,11 +73,20 @@ def route_api_config():
 
 @app.route('/api/categories')
 def route_api_categories():
+    # 本来はDBから取得しますが、ファイルから取得するように変更も可能です
     return jsonify(list(db.categories.find({}, {'_id': False})))
 
+# ★ここを修正：DBではなく index.json を読み込むように変更
 @app.route('/api/songs')
 def route_api_songs():
-    return jsonify(list(db.songs.find({'enabled': True}, {'_id': False})))
+    index_path = os.path.join('songs', 'index.json')
+    if os.path.exists(index_path):
+        with open(index_path, 'r', encoding='utf-8') as f:
+            songs_data = json.load(f)
+        return jsonify(songs_data)
+    else:
+        # ファイルがない場合は空のリストを返す
+        return jsonify([])
 
 @app.route('/api/scores/get')
 def route_api_scores_get():
@@ -99,6 +108,7 @@ def send_songs(filename):
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
+    # ポート番号が10000番になっている点に注意
     parser.add_argument('port', type=int, nargs='?', default=10000)
     parser.add_argument('-b', '--bind-address', default='0.0.0.0')
     args = parser.parse_args()
