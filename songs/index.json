@@ -16,9 +16,8 @@
         "stars": 9
       }
     }
-  }
-
-    {
+  },
+  {
     "id": "vs.vigvangs",
     "title": "VS.VIGVANGS",
     "title_lang": {
@@ -32,7 +31,7 @@
     "order": 2,
     "courses": {
       "edit": {
-        "stars"10
+        "stars": 10
       }
     }
   }
