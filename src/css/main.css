@@ -124,53 +124,73 @@
     pointer-events: none;
 }
 
-/* --- 難易度パネル表示の修正 --- */
+/* --- 選曲画面：難易度パネルの修正 --- */
 
-/* 1. パネル全体の基本設定 */
+/* パネル全体の枠組み */
 .song-select-course-icon {
     display: inline-block !important;
-    width: 12vmin !important;  /* アイコンが見やすいサイズ */
-    height: 12vmin !important;
-    background-image: url("img/difficulty.png") !important;
-    background-size: 100% auto !important; /* 横幅を画像に合わせる */
-    background-repeat: no-repeat !important;
-    vertical-align: middle;
+    width: 9vmin !important;   /* 幅を調整 */
+    height: 35vmin !important;  /* 縦長にする */
+    background-color: #fff !important; /* 基本は白背景 */
+    border: 0.4vmin solid #000 !important;
+    border-radius: 0.8vmin;
     position: relative;
+    margin: 0 1vmin;
 }
 
-/* 2. 各難易度の表示位置（縦1列の画像に対応） */
-/* おに (上から4番目) */
-.song-select-course-icon.oni {
-    background-position: 0 60.5% !important; 
-}
-
-/* 裏鬼 (一番下) */
+/* 裏鬼 (edit) が選ばれた時に背景を紫にする */
 .song-select-course-icon.edit {
-    background-position: 0 81% !important; 
+    background-color: #61308d !important; /* 紫色の帯 */
+    border-color: #fff !important;
 }
 
-/* 3. 星（★）の設定（もし画像内に星がない場合は一旦非表示） */
-/* 画像に星が含まれていない場合、変な場所が表示されるのを防ぎます */
-.song-select-course-icon .stars {
-    display: none !important; 
-}
-
-/* 4. 切り替え用ボタンを押しやすくする（矢印が見えない対策） */
-.course-side-button {
+/* アイコン（顔）を表示 */
+.song-select-course-icon::before {
+    content: "";
     position: absolute;
-    width: 30%;
-    height: 100%;
-    top: 0;
-    cursor: pointer;
-    z-index: 10;
-    /* デバッグ用：場所がわからない場合は background: rgba(255,255,255,0.2) を追加 */
+    top: 1.5vmin;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 7.5vmin;
+    height: 7.5vmin;
+    background-image: url("img/difficulty.png") !important;
+    background-size: 100% auto !important;
+    background-repeat: no-repeat;
 }
 
-.course-side-button.left { left: -15%; }
-.course-side-button.right { right: -15%; }
+/* 縦長画像 difficulty.png に合わせたアイコン位置指定 */
+.song-select-course-icon.easy::before   { background-position: 0 0% !important; }
+.song-select-course-icon.normal::before { background-position: 0 20.2% !important; }
+.song-select-course-icon.hard::before   { background-position: 0 40.5% !important; }
+.song-select-course-icon.oni::before    { background-position: 0 60.8% !important; }
+.song-select-course-icon.edit::before   { background-position: 0 81.2% !important; }
 
-/* 5. 選択中のアニメーション（少し浮かせる） */
-.song-select-course-icon.selected {
-    transform: scale(1.1);
-    filter: brightness(1.1);
+/* 星（★）の表示設定 */
+.song-select-course-icon .stars {
+    position: absolute;
+    bottom: 1.5vmin;
+    width: 100%;
+    display: flex;
+    flex-direction: column-reverse; /* 下から上に星を並べる */
+    align-items: center;
+}
+
+/* 星が文字(★)で生成される場合の予備設定 */
+.song-select-course-icon .stars div::after {
+    content: "★";
+    color: #ff3e3e; /* おに等の星の色 */
+    font-size: 2vmin;
+}
+
+.song-select-course-icon.edit .stars div::after {
+    color: #fff; /* 裏鬼の星は白 */
+}
+
+/* 左右の切り替え矢印を押しやすくする */
+.course-side-button {
+    width: 3vmin !important;
+    height: 6vmin !important;
+    background: rgba(255, 255, 255, 0.3) !important; /* 矢印が見えないので一時的に背景色 */
+    cursor: pointer;
+    z-index: 5;
 }
