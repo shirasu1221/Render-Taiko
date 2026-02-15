@@ -39,8 +39,7 @@ var assets = {
 		"abstractfile.js",
 		"idb.js",
 		"plugins.js",
-		"search.js",
-"easysettings.js"
+		"search.js"
 	],
 	"css": [
 		"main.css",
