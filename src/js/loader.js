@@ -182,7 +182,7 @@ class Loader{
 				songs = JSON.parse(songs)
 				songs.forEach(song => {
 					var directory = gameConfig.songs_baseurl + song.id + "/"
-					var songExt = song.music_type ? song.music_type : "mp3"
+					var songExt = song.music_type ? song.music_type : "ogg"
 					song.music = new RemoteFile(directory + "main." + songExt)
 					if(song.type === "tja"){
 						song.chart = new RemoteFile(directory + "main.tja")
