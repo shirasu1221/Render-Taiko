@@ -58,6 +58,8 @@ var assets = {
 		"notes_explosion.png",
 		"balloon.png",
 		"taiko.png",
+		"difficulty.png",
+		"crown.png",
 		"don_anim_normal_a.png",
 		"don_anim_normal_b1.png",
 		"don_anim_normal_b2.png",
