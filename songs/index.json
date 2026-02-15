@@ -30,7 +30,19 @@
     "music_type": "ogg",
     "order": 2,
     "courses": {
+      "easy": {
+        "stars": 5
+      },
+      "normal": {
+        "stars": 7
+      },
+      "hard": {
+        "stars": 8
+      },
       "oni": {
+        "stars": 10
+      },
+      "edit": {
         "stars": 10
       }
     }
