@@ -17,4 +17,23 @@
       }
     }
   }
+
+    {
+    "id": "vs.vigvangs",
+    "title": "VS.VIGVANGS",
+    "title_lang": {
+      "ja": "VS.VIGVANGS",
+      "en": "VS.VIGVANGS"
+    },
+    "subtitle": "MisoilePunch♪",
+    "category": "ナムコオリジナル",
+    "type": "tja",
+    "music_type": "ogg",
+    "order": 1,
+    "courses": {
+      "edit": {
+        "stars"10
+      }
+    }
+  }
 ]
