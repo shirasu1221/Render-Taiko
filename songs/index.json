@@ -1,15 +1,14 @@
 [
   {
-    "id": "da-kuekusumakina",
+    "id": "dark_ex_macina",
     "title": "ダーク・エクス・マキナ♡",
     "title_lang": {
-      "ja": "ダーク・エクス・マキナ♡",
+      "ja": "ダーク・エクス_マキナ♡",
       "en": "DARK EX MACHINA♡"
     },
     "subtitle": "マキナ the DARK prod. 坪井リヒト(BNSI)",
     "category": "ナムコオリジナル",
     "type": "tja",
     "order": 1
-  },
-
+  }
 ]
