@@ -194,3 +194,18 @@
     cursor: pointer;
     z-index: 5;
 }
+
+/* 星のアイコン自体のサイズと余白を固定する */
+.song-select-course-icon .stars div {
+    height: 2vmin; /* 星1個あたりの高さ */
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* もし星が重なって見える場合は、ここを調整 */
+.song-select-course-icon .stars {
+    height: 22vmin !important; /* 星が並ぶエリアの全高 */
+    bottom: 1vmin !important;
+}
