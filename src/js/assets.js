@@ -39,7 +39,8 @@ var assets = {
 		"abstractfile.js",
 		"idb.js",
 		"plugins.js",
-		"search.js"
+		"search.js",
+"easysettings.js"
 	],
 	"css": [
 		"main.css",
@@ -57,9 +58,9 @@ var assets = {
 		"notes_hit.png",
 		"notes_explosion.png",
 		"balloon.png",
+"balloon_count.png",
+"renda_count.png",
 		"taiko.png",
-		"difficulty.png",
-		"crown.png",
 		"don_anim_normal_a.png",
 		"don_anim_normal_b1.png",
 		"don_anim_normal_b2.png",
@@ -138,7 +139,10 @@ var assets = {
 	],
 	"fonts": {
 		"Kozuka": "Kozuka.otf",
-		"TnT": "TnT.ttf"
+		"TnT": "TnT.ttf",
+		"Kukde": "Kukde.otf",
+		"GW": "GW.ttf",
+		"HK": "HK.ttf"
 	},
 	"views": [
 		"game.html",
