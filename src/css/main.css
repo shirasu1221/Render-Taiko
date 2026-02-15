@@ -123,3 +123,28 @@
 .version-hide{
     pointer-events: none;
 }
+
+/* --- 裏鬼 (Edit) パネルの表示設定 --- */
+
+/* 1. パネル自体の設定 */
+.song-select-course-icon.edit {
+    background-image: url("img/difficulty.png") !important;
+    /* 紫色のパーツの座標。画像に合わせて 80%〜100% の間で調整してください */
+    background-position: 0 100% !important; 
+    background-size: 100% auto !important;
+    display: inline-block !important;
+}
+
+/* 2. パネル内の星（★）の設定 */
+.song-select-course-icon.edit .stars {
+    background-image: url("img/difficulty.png") !important;
+    /* 裏鬼用の星の座標。画像に合わせて調整してください */
+    background-position: 0 95% !important;
+    background-size: 100% auto !important;
+}
+
+/* 3. 万が一画像がない場合でも紫色の帯だけは出す設定 */
+.song-select-course-icon.edit {
+    background-color: #61308d; 
+    border-radius: 2vmin;
+}
