@@ -124,9 +124,9 @@
     pointer-events: none;
 }
 
-/* --- 選曲画面：難易度パネルの修正 --- */
+/* --- 難易度パネル・星表示の最終修正版 --- */
 
-/* パネル全体の枠組み */
+/* 1. パネル全体の基本枠（白い縦長の帯） */
 .song-select-course-icon {
     display: inline-block !important;
     width: 9vmin !important;   /* 幅を調整 */
@@ -136,6 +136,7 @@
     border-radius: 0.8vmin;
     position: relative;
     margin: 0 1vmin;
+    vertical-align: top;
 }
 
 /* 裏鬼 (edit) が選ばれた時に背景を紫にする */
@@ -144,7 +145,7 @@
     border-color: #fff !important;
 }
 
-/* アイコン（顔）を表示 */
+/* 2. アイコン（顔）を表示する設定 */
 .song-select-course-icon::before {
     content: "";
     position: absolute;
@@ -153,59 +154,71 @@
     transform: translateX(-50%);
     width: 7.5vmin;
     height: 7.5vmin;
-    background-image: url("img/difficulty.png") !important;
+    background-image: url("img/difficulty.png") !important; /* */
     background-size: 100% auto !important;
     background-repeat: no-repeat;
+    z-index: 2;
 }
 
 /* 縦長画像 difficulty.png に合わせたアイコン位置指定 */
 .song-select-course-icon.easy::before   { background-position: 0 0% !important; }
 .song-select-course-icon.normal::before { background-position: 0 20.2% !important; }
 .song-select-course-icon.hard::before   { background-position: 0 40.5% !important; }
-.song-select-course-icon.oni::before    { background-position: 0 60.8% !important; }
-.song-select-course-icon.edit::before   { background-position: 0 81.2% !important; }
+.song-select-course-icon.oni::before    { background-position: 0 60.8% !important; } /* おに */
+.song-select-course-icon.edit::before   { background-position: 0 81.2% !important; } /* 裏鬼 */
 
-/* 星（★）の表示設定 */
+/* 3. 星（★）を表示させるための設定 */
 .song-select-course-icon .stars {
     position: absolute;
     bottom: 1.5vmin;
     width: 100%;
+    height: 22vmin; /* 星が並ぶエリアの高さ */
     display: flex;
-    flex-direction: column-reverse; /* 下から上に星を並べる */
+    flex-direction: column-reverse; /* 下から上に積み上げる */
     align-items: center;
+    justify-content: flex-start;
+    z-index: 3;
 }
 
-/* 星が文字(★)で生成される場合の予備設定 */
-.song-select-course-icon .stars div::after {
-    content: "★";
-    color: #ff3e3e; /* おに等の星の色 */
-    font-size: 2vmin;
-}
-
-.song-select-course-icon.edit .stars div::after {
-    color: #fff; /* 裏鬼の星は白 */
-}
-
-/* 左右の切り替え矢印を押しやすくする */
-.course-side-button {
-    width: 3vmin !important;
-    height: 6vmin !important;
-    background: rgba(255, 255, 255, 0.3) !important; /* 矢印が見えないので一時的に背景色 */
-    cursor: pointer;
-    z-index: 5;
-}
-
-/* 星のアイコン自体のサイズと余白を固定する */
-.song-select-course-icon .stars div {
-    height: 2vmin; /* 星1個あたりの高さ */
-    width: 100%;
+/* 個別の星（star-icon）の見た目 */
+.song-select-course-icon .stars .star-icon {
+    width: 2.5vmin;
+    height: 2.5vmin;
+    margin: 0.1vmin 0;
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* もし星が重なって見える場合は、ここを調整 */
-.song-select-course-icon .stars {
-    height: 22vmin !important; /* 星が並ぶエリアの全高 */
-    bottom: 1vmin !important;
+/* 星の形を文字「★」で強制表示 */
+.song-select-course-icon .stars .star-icon::after {
+    content: "★";
+    font-size: 2.2vmin;
+    color: #ff3e3e; /* おに等の星の色（赤） */
+    text-shadow: 0 0 2px #000;
+}
+
+/* 裏鬼 (edit) の時の星の色を白にする */
+.song-select-course-icon.edit .stars .star-icon::after {
+    color: #ffffff !important; /* 裏鬼の星は白 */
+}
+
+/* 4. 難易度切り替え用の透明ボタン（矢印の代わり） */
+.course-side-button {
+    position: absolute;
+    width: 4vmin !important;
+    height: 10vmin !important;
+    top: 0;
+    cursor: pointer;
+    z-index: 5;
+    background: rgba(255, 255, 255, 0.1) !important; /* 押しやすくするための微かな色 */
+}
+
+.course-side-button.left { left: -2vmin; }
+.course-side-button.right { right: -2vmin; }
+
+/* 元々のテキスト表示（「かんたん」など）と重なる場合は非表示にする */
+.song-select-course-icon span {
+    display: none !important;
 }
